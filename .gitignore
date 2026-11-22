@@ -1,0 +1,6 @@
+# Obsidian writes per-user settings here
+data.json
+
+# OS / tooling
+.DS_Store
+node_modules/

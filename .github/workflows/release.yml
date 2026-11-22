@@ -1,0 +1,44 @@
+# Push a tag that matches manifest.json "version" (e.g. 0.1.0, no "v" prefix)
+# to create a draft GitHub release with the three files Obsidian downloads.
+# There is no build step: main.js is the source.
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check tag matches manifest version
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          version=$(jq -r .version manifest.json)
+          if [ "$tag" != "$version" ]; then
+            echo "Tag $tag does not match manifest.json version $version"
+            exit 1
+          fi
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
+
+      - name: Create draft release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          gh release create "$tag" --title="$tag" --draft main.js manifest.json styles.css
