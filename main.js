@@ -32,7 +32,8 @@ const STRINGS = {
     colLine: 'Line', colDy: 'Vertical (px)', colDx: 'Horizontal (px)', colText: 'Text',
     sEnabled: 'Enabled', dEnabled: 'Turn off to get the default editing view back. The "Toggle on/off" command switches instantly for comparison.',
     hLayout: 'Layout',
-    sSpacing: 'Block spacing', dSpacing: 'Gaps between paragraphs, headings, lists, code and tables match reading view to the pixel. Consecutive blank lines collapse like in reading view and expand when the cursor is on them.',
+    sSpacing: 'Block spacing', dSpacing: 'Gaps between paragraphs, headings, lists, code and tables match reading view to the pixel.',
+    sCollapse: 'Collapse extra blank lines', dCollapse: 'Like reading view, extra blank lines take no space (they expand while the cursor is on them). Off: every blank line you add keeps a full line of space, as in the default editor.',
     sLists: 'List indentation', dLists: 'Bullet, number and text positions match reading view.',
     sQuotes: 'Blockquotes', dQuotes: 'Blockquote indentation matches reading view; the > marker is hidden on the line being edited.',
     sCode: 'Code blocks', dCode: 'Code line height and top/bottom padding match reading view. Fence lines (```) only appear when the cursor is on them.',
@@ -62,7 +63,8 @@ const STRINGS = {
     colLine: '줄', colDy: '세로(px)', colDx: '가로(px)', colText: '내용',
     sEnabled: '사용', dEnabled: '끄면 Obsidian 기본 편집 모드로 돌아갑니다. "켜기/끄기" 명령으로 전후를 바로 비교할 수 있습니다.',
     hLayout: '모양 맞추기',
-    sSpacing: '블록 간격', dSpacing: '빈 줄·제목·목록·코드·표 사이 간격을 읽기 모드와 같은 픽셀로 맞춥니다. 연속된 빈 줄은 읽기 모드처럼 하나로 접히고, 커서를 두면 펼쳐집니다.',
+    sSpacing: '블록 간격', dSpacing: '빈 줄·제목·목록·코드·표 사이 간격을 읽기 모드와 같은 픽셀로 맞춥니다.',
+    sCollapse: '연속 빈 줄 접기', dCollapse: '읽기 모드처럼 추가로 넣은 빈 줄이 공간을 차지하지 않습니다(커서를 두면 펼쳐짐). 끄면 기본 편집 모드처럼 Enter로 넣은 빈 줄마다 한 줄씩 공간이 생깁니다.',
     sLists: '목록 들여쓰기', dLists: '글머리표·번호의 위치와 글자 시작 위치를 읽기 모드와 같게 합니다.',
     sQuotes: '인용문', dQuotes: '인용문 들여쓰기를 맞추고 편집 중인 줄의 > 기호를 숨깁니다.',
     sCode: '코드 블록', dCode: '코드 줄 높이와 위/아래 여백을 읽기 모드와 같게 합니다. ``` 줄은 그 줄에 커서가 있을 때만 나타납니다.',
@@ -772,6 +774,8 @@ function buildExtension(plugin) {
           const b = blockOf(i);
           let cls = spec ? spec.c : [];
           if (!S.spacing) cls = cls.filter((c) => !/^mp-(gap|collapse|ga|gb|gai|gbi|lpb)$/.test(c));
+          // 연속 빈 줄 접기가 꺼져 있으면(기본) 추가 빈 줄은 기본 편집 모드처럼 한 줄 높이를 유지한다
+          if (!S.collapseBlankLines) cls = cls.filter((c) => c !== 'mp-collapse');
           if (cursorHere) {
             // 커서가 있는 빈 줄은 접지 않는다(캐럿이 보이도록)
             cls = cls.filter((c) => c !== 'mp-collapse' && !(c === 'mp-gap' && spec.g < 12));
@@ -1053,6 +1057,7 @@ const DEFAULT_SETTINGS = {
   hangingHeadingMarks: true,
   centerImages: true,
   lenientCallouts: true,
+  collapseBlankLines: false,
 };
 
 const FEATURE_CLASSES = {
@@ -1202,6 +1207,7 @@ class ModeParitySettingTab extends PluginSettingTab {
     toggle('enabled', tr('sEnabled'), tr('dEnabled'));
     heading('hLayout');
     toggle('spacing', tr('sSpacing'), tr('dSpacing'));
+    toggle('collapseBlankLines', tr('sCollapse'), tr('dCollapse'));
     toggle('lists', tr('sLists'), tr('dLists'));
     toggle('quotes', tr('sQuotes'), tr('dQuotes'));
     toggle('codeBlocks', tr('sCode'), tr('dCode'));

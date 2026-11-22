@@ -30,7 +30,7 @@ Editing inside a callout (left, the word is selected) keeps it rendered exactly 
 
 | Area | Stock Live Preview | With Mode Parity |
 | --- | --- | --- |
-| Blank lines | Every blank line is a full line tall | Reading-view gaps (e.g. paragraph 16px, paragraph → heading 40px). Extra blank lines collapse and expand again when the cursor is on them |
+| Blank lines | Every blank line is a full line tall | The blank line between two blocks uses the Reading-view gap (e.g. paragraph 16px, paragraph → heading 40px). Extra blank lines you add keep a full line of space by default; turn on **Collapse extra blank lines** to collapse them like Reading view |
 | Headings | Only 1rem above | Same top/bottom spacing as Reading view, depending on the previous block |
 | Lists | Bullet and text positions differ, loose lists get extra gaps | Bullet center and text start match, nested list padding matches |
 | Blockquotes | Different indent, `>` shown on the active line | Reading-view indent, `>` hidden |
@@ -87,7 +87,7 @@ Until it is listed in the community directory, install manually: download `main.
 
 편집 모드(Live Preview)를 읽기 모드와 **같은 픽셀 위치**로 맞추고, 콜아웃처럼 커서를 넣으면 원문으로 바뀌던 블록을 **렌더링된 모양 그대로 편집**하게 해 주는 Obsidian 플러그인입니다.
 
-- **블록 간격**: 빈 줄·제목·목록·인용·코드·구분선·표·수식·각주 표시의 위치를 읽기 모드와 같게 맞춥니다. 연속 빈 줄은 읽기 모드처럼 하나로 접히고, 커서를 두면 펼쳐집니다.
+- **블록 간격**: 빈 줄·제목·목록·인용·코드·구분선·표·수식·각주 표시의 위치를 읽기 모드와 같게 맞춥니다. Enter로 추가한 빈 줄은 기본적으로 한 줄씩 공간을 유지하고, 설정의 **연속 빈 줄 접기**를 켜면 읽기 모드처럼 접힙니다.
 - **렌더링된 채로 편집**: 콜아웃 안을 클릭하면 클릭한 글자에 바로 커서가 들어가고 모양은 그대로입니다. 아이콘을 누르거나 제목 맨 앞에서 ←를 누르면 `[!종류]`를 고칠 수 있습니다. 코드 블록은 ``` 줄에 커서를 둘 때만 그 줄이 나타나고, 편집 중인 제목의 `##`는 왼쪽 여백에 표시됩니다.
 - **이미지 가운데 정렬**, **붙여 쓴 콜아웃(`>[!info]제목`)도 콜아웃으로** 그리기(둘 다 설정에서 끌 수 있음, 파일 내용은 바꾸지 않음)
 - **측정 기반**: 현재 테마의 읽기 모드를 실제로 그려서 간격을 재므로 다른 테마에서도 그 테마 기준으로 맞춥니다.
