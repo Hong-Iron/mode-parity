@@ -1,7 +1,7 @@
 {
   "id": "mode-parity",
   "name": "Mode Parity",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minAppVersion": "1.5.0",
   "description": "Make Live Preview line up with Reading view to the pixel, and edit callouts while they stay rendered.",
   "author": "Hong-Iron",

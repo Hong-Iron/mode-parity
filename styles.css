@@ -2,18 +2,18 @@
  * 모든 규칙은 body.mp-on 과 Live Preview 편집기 안에서만 동작한다.
  * --mp-* 수치는 플러그인이 현재 테마의 읽기 모드를 실제로 재서 body 에 넣는다. */
 
-/* 보정용 숨은 프로브 */
-.mp-probe {
-  position: absolute !important;
-  left: -100000px !important;
-  top: 0 !important;
-  width: 720px !important;
-  height: auto !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+/* 보정용 숨은 프로브 (테마가 .workspace-leaf-content 를 바꿔도 화면에 보이지 않도록 선택자를 구체적으로) */
+body .mp-probe.workspace-leaf-content[data-type="markdown"] {
+  position: absolute;
+  left: -100000px;
+  top: 0;
+  width: 720px;
+  height: auto;
+  visibility: hidden;
+  pointer-events: none;
   contain: layout style;
 }
-.mp-probe .markdown-preview-view { height: auto; overflow: visible; }
+body .mp-probe.workspace-leaf-content[data-type="markdown"] .markdown-preview-view { height: auto; overflow: visible; }
 .mp-probe .el-table { overflow-x: auto; } /* 읽기 모드의 표 래퍼와 같게(여백이 겹치지 않음) */
 
 /* ───────── 1. 블록 간격 ───────── */
@@ -28,41 +28,41 @@ body.mp-on.mp-spacing .markdown-source-view.mod-cm6.is-live-preview {
 
 /* 블록 사이 빈 줄 → 읽기 모드 간격 */
 body.mp-on .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-gap {
-  height: var(--mp-g) !important;
-  min-height: 0 !important;
-  line-height: var(--mp-g) !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  height: var(--mp-g);
+  min-height: 0;
+  line-height: var(--mp-g);
+  padding-top: 0;
+  padding-bottom: 0;
   overflow: hidden;
 }
 
 /* 읽기 모드에서 사라지는 빈 줄(연속 빈 줄, 목록 항목 사이 빈 줄, 문서 앞뒤 빈 줄) */
 body.mp-on .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-collapse {
-  height: 0 !important;
-  min-height: 0 !important;
-  line-height: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  border-top: 0 !important;
-  border-bottom: 0 !important;
+  height: 0;
+  min-height: 0;
+  line-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top: 0;
+  border-bottom: 0;
   overflow: hidden;
 }
 
 /* 빈 줄 없이 붙은 블록 사이 간격: 바깥 블록은 투명 테두리(배경은 안쪽만) */
 body.mp-on .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-gb {
-  border-top: var(--mp-gb) solid transparent !important;
+  border-top: var(--mp-gb) solid transparent;
   background-clip: padding-box;
 }
 body.mp-on .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-ga {
-  border-bottom: var(--mp-ga) solid transparent !important;
+  border-bottom: var(--mp-ga) solid transparent;
   background-clip: padding-box;
 }
 /* 인용·콜아웃 안쪽은 배경/세로선이 이어져야 하므로 padding */
 body.mp-on .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-gbi {
-  padding-top: calc(var(--mp-gb) + var(--mp-base-pt, 0px)) !important;
+  padding-top: calc(var(--mp-gb) + var(--mp-base-pt, 0px));
 }
 body.mp-on .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-gai {
-  padding-bottom: calc(var(--mp-ga) + var(--mp-base-pb, 0px)) !important;
+  padding-bottom: calc(var(--mp-ga) + var(--mp-base-pb, 0px));
 }
 body.mp-on .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-list-line {
   --mp-base-pt: var(--list-spacing);
@@ -77,10 +77,9 @@ body.mp-on .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-list-l
 /* 글머리표 영역을 읽기 모드의 "글자 시작 위치" 폭으로 고정.
  * Obsidian 은 이 영역 뒤 좌표를 재서 줄바꿈 들여쓰기를 정하므로 자동으로 따라온다. */
 body.mp-on.mp-lists .markdown-source-view.mod-cm6.is-live-preview .cm-formatting-list-ul {
-  display: inline-block;
+  display: inline-flex;
   width: var(--mp-ul-text);
   padding-inline-start: 0;
-  text-indent: 0;
 }
 body.mp-on.mp-lists .markdown-source-view.mod-cm6.is-live-preview .cm-formatting-list-ul .list-bullet {
   width: 0;
@@ -92,7 +91,7 @@ body.mp-on.mp-lists .markdown-source-view.mod-cm6.is-live-preview .cm-formatting
   justify-content: flex-end;
   width: var(--mp-ol-text);
   padding-inline-start: 0;
-  text-indent: 0;
+  text-indent: 0; /* 번호 글자가 줄의 내어쓰기(음수 text-indent)를 물려받아 밀리지 않도록 */
   white-space: pre;
 }
 
@@ -101,7 +100,6 @@ body.mp-on.mp-lists .markdown-source-view.mod-cm6.is-live-preview .cm-formatting
 body.mp-on.mp-quotes .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote:not(.mp-co) .cm-formatting-quote {
   display: inline-block;
   width: var(--mp-bq-text);
-  text-indent: 0;
   color: transparent;
 }
 body.mp-on.mp-quotes .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote:not(.mp-co) .cm-formatting-quote .cm-transparent {
@@ -110,7 +108,6 @@ body.mp-on.mp-quotes .markdown-source-view.mod-cm6.is-live-preview .cm-line.Hype
 body.mp-on.mp-quotes .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-quote:not(.mp-co) .cm-blockquote-border {
   width: 0;
   overflow: visible;
-  text-indent: 0;
 }
 
 /* ───────── 4. 코드 블록 ───────── */
@@ -131,24 +128,24 @@ body.mp-on.mp-code .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperM
 /* 여는/닫는 줄 = pre 의 위/아래 안쪽 여백. Obsidian 은 커서가 블록 안 어디에 있든 ``` 를 드러내지만,
  * 여기서는 커서가 "그 줄"에 있을 때만 드러낸다 → 코드를 고치는 동안 블록 모양이 그대로 유지된다. */
 body.mp-on.mp-code .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-code-b:not(.mp-cur) {
-  height: var(--mp-code-pt) !important;
+  height: var(--mp-code-pt);
   line-height: var(--mp-code-pt);
   overflow: visible;
 }
 body.mp-on.mp-code .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-code-e:not(.mp-cur) {
-  height: var(--mp-code-pb) !important;
+  height: var(--mp-code-pb);
   line-height: var(--mp-code-pb);
   overflow: visible;
 }
 body.mp-on.mp-code .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-code-b:not(.mp-cur) > :not(.code-block-flair):not(.cm-fold-indicator),
 body.mp-on.mp-code .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-code-e:not(.mp-cur) > :not(.cm-fold-indicator) {
-  font-size: 0 !important;
+  font-size: 0;
 }
 
 /* ───────── 5. 수식 블록 ───────── */
 
 /* 편집 모드는 수식 위아래에 1em 안쪽 여백을 따로 둔다 → 읽기 모드의 MathJax 안쪽 여백으로 바꾸고, 바깥 간격은 플러그인이 계산 */
-body.mp-on.mp-math .markdown-source-view.mod-cm6.is-live-preview .math-block > mjx-container {
+body.mp-on.mp-math .markdown-source-view.mod-cm6.is-live-preview .math-block > .MathJax {
   padding-top: var(--mp-mjx-pt);
   padding-bottom: var(--mp-mjx-pb);
 }
@@ -157,8 +154,8 @@ body.mp-on.mp-math .markdown-source-view.mod-cm6.is-live-preview .math-block > m
 
 /* 커서가 없을 때 Obsidian 은 구분선을 위젯(div.hr.cm-line)으로 그린다: 높이 = 선 두께 (읽기 모드 hr 과 같은 상자) */
 body.mp-on.mp-spacing .markdown-source-view.mod-cm6.is-live-preview .cm-content > .cm-line.hr {
-  height: var(--mp-hr-h) !important;
-  min-height: 0 !important;
+  height: var(--mp-hr-h);
+  min-height: 0;
   line-height: 0;
   overflow: visible;
 }
@@ -174,7 +171,7 @@ body.mp-on.mp-spacing .markdown-source-view.mod-cm6.is-live-preview .cm-footref 
 
 /* ───────── 5-3. 중첩 목록 아래 여백 ───────── */
 body.mp-on.mp-spacing .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-list-line.mp-lpb {
-  padding-bottom: calc(var(--list-spacing) * var(--mp-lpb)) !important;
+  padding-bottom: calc(var(--list-spacing) * var(--mp-lpb));
 }
 
 /* ───────── 5-4. 이미지 ─────────
@@ -183,7 +180,7 @@ body.mp-on.mp-spacing .markdown-source-view.mod-cm6.is-live-preview .cm-line.Hyp
  * (스니펫의 img { display:block } 도 여기서는 되돌린다) */
 body.mp-on.mp-spacing .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-img-line > img:not(.cm-widgetBuffer),
 body.mp-on.mp-spacing .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-img-line .internal-embed.image-embed img {
-  display: inline-block !important;
+  display: inline-block;
   vertical-align: top;
 }
 body.mp-on.mp-spacing .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-img-line .internal-embed.image-embed {
@@ -214,7 +211,7 @@ body.mp-on.mp-hang .markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperM
 /* ───────── 7. 렌더링된 채로 편집하는 콜아웃 ───────── */
 
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co {
-  background-color: var(--mp-co-bg) !important;
+  background-color: var(--mp-co-bg);
   mix-blend-mode: var(--callout-blend-mode);
   font-style: normal;
   /* 왼쪽/오른쪽 안쪽 여백은 투명 테두리로 — Obsidian 의 들여쓰기 계산(테두리 안쪽 기준)과 충돌하지 않는다 */
@@ -224,21 +221,21 @@ body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp
   box-shadow: inset var(--mp-co-bw) 0 0 0 var(--mp-co-bc), inset calc(-1 * var(--mp-co-bw)) 0 0 0 var(--mp-co-bc);
 }
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co::before {
-  display: none !important; /* 인용문 세로선 */
+  display: none; /* 인용문 세로선 */
 }
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co .cm-formatting-quote,
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co .cm-formatting-quote .cm-transparent {
-  font-size: 0 !important;
+  font-size: 0;
   letter-spacing: 0;
 }
 /* 제목 맨 앞에 커서: "> [!종류]" 를 흐리게 보여 준다(종류를 고칠 수 있게) */
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co-title.mp-co-reveal .cm-formatting-quote {
-  font-size: inherit !important;
+  font-size: inherit;
   color: var(--text-faint);
 }
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co-title {
-  padding-top: var(--mp-co-pt) !important;
-  padding-bottom: var(--mp-co-t2b) !important;
+  padding-top: var(--mp-co-pt);
+  padding-bottom: var(--mp-co-t2b);
   line-height: var(--mp-co-tlh);
   font-size: var(--mp-co-tfs);
   font-weight: var(--mp-co-tfw);
@@ -247,10 +244,10 @@ body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp
   border-start-end-radius: var(--mp-co-r);
 }
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co-title.mp-co-last {
-  padding-bottom: var(--mp-co-pb) !important;
+  padding-bottom: var(--mp-co-pb);
 }
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co-body.mp-co-last {
-  padding-bottom: var(--mp-co-b2e) !important; /* 마지막 문단 아래 여백 + 콜아웃 안쪽 여백 */
+  padding-bottom: var(--mp-co-b2e); /* 마지막 문단 아래 여백 + 콜아웃 안쪽 여백 */
 }
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co-last {
   border-end-start-radius: var(--mp-co-r);
@@ -264,7 +261,6 @@ body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp
   width: var(--mp-co-iw);
   height: var(--mp-co-tlh);
   margin-inline-end: var(--mp-co-ig);
-  text-indent: 0;
   cursor: pointer;
 }
 body.mp-on.mp-callouts .markdown-source-view.mod-cm6.is-live-preview .cm-line.mp-co .mp-co-icon svg {

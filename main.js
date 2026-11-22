@@ -82,7 +82,10 @@ const STRINGS = {
 
 function uiLang() {
   let l = 'en';
-  try { l = (typeof obsidian.getLanguage === 'function' ? obsidian.getLanguage() : window.localStorage.getItem('language')) || 'en'; } catch (e) { /* 기본 영어 */ }
+  try {
+    if (typeof obsidian.getLanguage === 'function') l = obsidian.getLanguage() || 'en';
+    else if (obsidian.moment && typeof obsidian.moment.locale === 'function') l = obsidian.moment.locale() || 'en';
+  } catch (e) { /* 기본 영어 */ }
   return String(l).toLowerCase().startsWith('ko') ? 'ko' : 'en';
 }
 function tr(key, vars) {
